@@ -185,7 +185,7 @@ int search()
         int cx = current.x;
         int cy = current.y;
 
-        // 현지점의 CloseList를 방문처리
+        // 현지점의 방문처리
         cell[cy][cx].visit = true;
 
         float nf, ng, nh;
@@ -211,7 +211,7 @@ int search()
 
                     return true;
                 }
-                // closedList 첵크해서 전에 방문했다고 해둔곳 은 또 볼필요없고...
+                // visit 첵크해서 전에 방문했다고 해둔곳 은 또 볼필요없고...
                 // 벽이 아닌곳인가?
                 else if (!cell[ny][nx].visit && !isWall( nx, ny)) {
                     ng = cell[cy][cx].g + 1.000f;
