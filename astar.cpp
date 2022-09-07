@@ -13,9 +13,9 @@ using namespace std;
 int maph = 10;
 int mapw = 10;
 char map[10][10] =
-/*
+
 {
-    { 0,0,0,1,0,1,0,1,0,0},
+    { 2,0,0,1,0,1,0,1,0,0},
     { 1,1,0,1,0,1,0,1,0,0},
     { 0,1,0,1,0,1,0,1,0,0},
     { 0,1,0,1,0,1,0,0,0,0},
@@ -26,7 +26,7 @@ char map[10][10] =
     { 0,1,1,1,0,1,0,1,0,0},
     { 0,0,0,1,0,0,0,1,1,9}
 };
-*/
+/*
 {
     { 0,0,0,0,0,0,0,0,0,0},
     { 0,0,0,0,0,0,0,0,0,0},
@@ -39,7 +39,7 @@ char map[10][10] =
     { 0,0,0,0,0,0,0,0,0,0},
     { 0,0,0,0,0,0,0,0,0,0},
 };
-
+*/
 constexpr float INF = (987654321.0f);
 
 const int dir_x[4] = { 0, 0, 1, -1 };
@@ -85,12 +85,14 @@ public:
     {
         f = g = h = INF;
         parent_x = parent_y = -1;
+        visit = false;
     }
     float f;
     float g;
     float h;
     int parent_x;
     int parent_y;
+    bool visit;
 };
 
 vector<Coord> TrackingQueue;
@@ -123,13 +125,12 @@ float CalcCostHeuristic(int x, int y, int dest_x, int dest_y)
 
 // 모든셀에 무한대값을 넣고 부모를 -1로 만든다.
 vector<vector<Cell>> cell(maph, vector<Cell>(mapw));
-vector<vector<bool>> closedList(maph, vector<bool>(mapw));
 priority_queue<CostCoord, vector<CostCoord>, Less> openList; // 정렬된 구조체로 Cost가 낮은 게 자동으로 정렬되어서 맨앞으로 온다. 
 
 int start_x = 0;
-int start_y = 5;
-int dest_x = 9;
-int dest_y = 5;
+int start_y = 0;
+int dest_x = 0;
+int dest_y = 0;
 
 
 void init()
@@ -185,7 +186,7 @@ int search()
         int cy = current.y;
 
         // 현지점의 CloseList를 방문처리
-        closedList[cy][cx] = true;
+        cell[cy][cx].visit = true;
 
         float nf, ng, nh;
 
@@ -212,7 +213,7 @@ int search()
                 }
                 // closedList 첵크해서 전에 방문했다고 해둔곳 은 또 볼필요없고...
                 // 벽이 아닌곳인가?
-                else if (!closedList[ny][nx] && !isWall( nx, ny)) {
+                else if (!cell[ny][nx].visit && !isWall( nx, ny)) {
                     ng = cell[cy][cx].g + 1.000f;
                     nh = CalcCostHeuristic(nx, ny, dest_x, dest_y);
                     nf = ng + nh;
